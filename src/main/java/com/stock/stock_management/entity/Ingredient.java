@@ -38,4 +38,20 @@ public class Ingredient {
         this.quantity = quantity;
     }
 
+    public BigDecimal priceUpdate(BigDecimal newPrice, Integer newQuantity) {
+        return this.price = BigDecimal.valueOf(
+                ((this.price.doubleValue() * this.quantity) + (newPrice.doubleValue() * newQuantity)) / (this.quantity
+                        + newQuantity));
+    }
+
+    public Integer quantityUpdate(Integer newQuantity) {
+        return this.quantity = this.quantity + newQuantity;
+    }
+
+    public void updatePriceAndQuantity(BigDecimal newPrice, Integer newQuantity) {
+        priceUpdate(newPrice, newQuantity);
+
+        quantityUpdate(newQuantity);
+    }
+
 }

@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 
 import com.stock.stock_management.dto.IngredientRequest;
 import com.stock.stock_management.dto.IngredientResponse;
+import com.stock.stock_management.dto.IngredientUpdateRequest;
+import com.stock.stock_management.entity.Ingredient;
+import com.stock.stock_management.exception.IdNotFoundException;
 import com.stock.stock_management.mapper.IngredientMapper;
 import com.stock.stock_management.repository.IngredientRepository;
 
@@ -32,7 +35,7 @@ public class IngredientService {
     public IngredientResponse findById(Long id) {
         return ingredientRepository.findById(id)
                 .map(this.ingredientMapper::toIngredientResponse)
-                .orElseThrow(() -> new EntityNotFoundException("Produto com ID " + id + " não encontrado"));
+                .orElseThrow(() -> new IdNotFoundException(id));
     }
 
     public IngredientResponse create(IngredientRequest request) {
@@ -41,6 +44,28 @@ public class IngredientService {
         this.ingredientRepository.save(ingredient);
 
         return this.ingredientMapper.toIngredientResponse(ingredient);
+    }
+
+    public IngredientResponse update(Long id, IngredientUpdateRequest request) {
+        Ingredient ingredientToUpdate = this.ingredientRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException(id));
+
+        ingredientToUpdate.updatePriceAndQuantity(request.getPrice(), request.getQuantity());
+
+        this.ingredientRepository.save(ingredientToUpdate);
+
+        return this.ingredientMapper.toIngredientResponse(ingredientToUpdate);
+    }
+
+    public void delete(Long id) {
+
+        Ingredient ingredientToDelete = this.ingredientRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException(id));
+
+        this.ingredientRepository.delete(ingredientToDelete);
+
+        return;
+
     }
 
 }

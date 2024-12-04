@@ -12,8 +12,6 @@ import com.stock.stock_management.exception.IdNotFoundException;
 import com.stock.stock_management.mapper.IngredientMapper;
 import com.stock.stock_management.repository.IngredientRepository;
 
-import jakarta.persistence.EntityNotFoundException;
-
 @Service
 public class IngredientService {
 

@@ -1,6 +1,10 @@
 package com.stock.stock_management.entity;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,10 +16,12 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Entity
+@Data
 @NoArgsConstructor
 @Table(name = "ingredient")
+@SQLDelete(sql = "UPDATE ingredient SET deleted = true WHERE id = ?")
+@SQLRestriction("deleted = false")
 public class Ingredient {
 
     @Id
@@ -26,11 +32,23 @@ public class Ingredient {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, scale = 2)
     private BigDecimal price;
 
     @Column(nullable = false)
     private Integer quantity;
+
+    @Column(nullable = false)
+    private LocalDateTime created_at = LocalDateTime.now();
+
+    @Column
+    private LocalDateTime updated_at;
+
+    @Column
+    private LocalDateTime deleted_at;
+
+    @Column
+    private boolean deleted = Boolean.FALSE;
 
     public Ingredient(String name, BigDecimal price, Integer quantity) {
         this.name = name;
@@ -39,6 +57,7 @@ public class Ingredient {
     }
 
     public BigDecimal priceUpdate(BigDecimal newPrice, Integer newQuantity) {
+        setUpdatedAt();
         return this.price = BigDecimal.valueOf(
                 ((this.price.doubleValue() * this.quantity) + (newPrice.doubleValue() * newQuantity)) / (this.quantity
                         + newQuantity));
@@ -52,6 +71,14 @@ public class Ingredient {
         priceUpdate(newPrice, newQuantity);
 
         quantityUpdate(newQuantity);
+    }
+
+    public void setUpdatedAt() {
+        this.updated_at = LocalDateTime.now();
+    }
+
+    public void setDeletedAt() {
+        this.deleted_at = LocalDateTime.now();
     }
 
 }

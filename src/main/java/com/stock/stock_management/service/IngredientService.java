@@ -1,5 +1,6 @@
 package com.stock.stock_management.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -59,6 +60,10 @@ public class IngredientService {
 
         Ingredient ingredientToDelete = this.ingredientRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException(id));
+
+        ingredientToDelete.setDeletedAt();
+
+        this.ingredientRepository.save(ingredientToDelete);
 
         this.ingredientRepository.delete(ingredientToDelete);
 

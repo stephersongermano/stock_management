@@ -15,4 +15,5 @@ public class IngredientResponse {
     private String name;
     private BigDecimal price;
     private Integer quantity;
+    private String brand;
 }

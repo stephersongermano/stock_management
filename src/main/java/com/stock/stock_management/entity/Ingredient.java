@@ -2,15 +2,19 @@ package com.stock.stock_management.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+
+import com.stock.stock_management.dto.IngredientRequest;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -39,6 +43,9 @@ public class Ingredient {
     private Integer quantity;
 
     @Column(nullable = false)
+    private String brand;
+
+    @Column(nullable = false)
     private LocalDateTime created_at = LocalDateTime.now();
 
     @Column
@@ -50,10 +57,21 @@ public class Ingredient {
     @Column
     private boolean deleted = Boolean.FALSE;
 
-    public Ingredient(String name, BigDecimal price, Integer quantity) {
+    @ManyToMany(mappedBy = "ingredients")
+    private List<StockEntry> stockEntries;
+
+    public Ingredient(String name, BigDecimal price, Integer quantity, String brand) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
+        this.brand = brand;
+    }
+
+    public Ingredient(IngredientRequest request) {
+        this.name = request.getName();
+        this.price = request.getPrice();
+        this.quantity = request.getQuantity();
+        this.brand = request.getBrand();
     }
 
     public BigDecimal priceUpdate(BigDecimal newPrice, Integer newQuantity) {

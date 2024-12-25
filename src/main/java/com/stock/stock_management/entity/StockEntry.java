@@ -12,19 +12,22 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "stock_entry")
 public class StockEntry {
 
     @Id
-    @GeneratedValue(generator = "ingredient_id_seq_generator", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "ingredient_id_seq_generator", sequenceName = "ingredient_id_seq", allocationSize = 1)
+    @GeneratedValue(generator = "stock_entry_id_seq_generator", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "stock_entry_id_seq_generator", sequenceName = "stock_entry_id_seq", allocationSize = 1)
     private Long id;
 
     @Column(name = "entry_date", nullable = false)
@@ -36,14 +39,14 @@ public class StockEntry {
     @Column(name = "total_value", nullable = false)
     private BigDecimal totalValue;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "stock_entry_ingredients", joinColumns = @JoinColumn(name = "stock_entry_id"), inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
-    private List<Ingredient> ingredients;
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(name = "stock_entry_ingredients", joinColumns = @JoinColumn(name = "stock_entry_id"), inverseJoinColumns = @JoinColumn(name = "ingredient_history_id"))
+    private List<IngredientHistory> ingredientsHistory;
 
-    public StockEntry(Integer noteNumber, BigDecimal totalValue, List<Ingredient> ingredients) {
+    public StockEntry(Integer noteNumber, BigDecimal totalValue, List<IngredientHistory> ingredientsHistory) {
         this.noteNumber = noteNumber;
         this.totalValue = totalValue;
-        this.ingredients = ingredients;
+        this.ingredientsHistory = ingredientsHistory;
     }
 
 }

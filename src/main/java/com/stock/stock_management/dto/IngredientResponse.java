@@ -13,7 +13,7 @@ public class IngredientResponse {
 
     private Long id;
     private String name;
+    private String brand;
     private BigDecimal price;
     private Integer quantity;
-    private String brand;
 }

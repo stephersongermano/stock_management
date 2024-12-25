@@ -1,0 +1,12 @@
+create sequence ingredient_id_seq start with 1 increment by 1;
+create table history_ingredient (price numeric(38,2) not null, quantity integer not null, created_at timestamp(6) not null, id bigint not null, ingredient_id bigint, stock_entry_id bigint, brand varchar(255) not null, name varchar(255) not null, primary key (id));
+create table ingredient (deleted boolean, price numeric(38,2) not null, quantity integer not null, created_at timestamp(6) not null, deleted_at timestamp(6), id bigint not null, updated_at timestamp(6), brand varchar(255) not null, name varchar(255) not null, primary key (id));
+create table ingredient_historical (ingredient_history_id bigint not null unique, ingredient_id bigint not null);
+create table stock_entry (note_number integer not null, total_value numeric(38,2) not null, entry_date timestamp(6) not null, id bigint not null, primary key (id));
+create table stock_entry_ingredients (ingredient_history_id bigint not null unique, stock_entry_id bigint not null);
+alter table if exists history_ingredient add constraint FK4hi2bxbb09wkvrxt2wg2ij3ck foreign key (ingredient_id) references ingredient;
+alter table if exists history_ingredient add constraint FK1tiq1otwg1pjbdqxny58f4cnj foreign key (stock_entry_id) references stock_entry;
+alter table if exists ingredient_historical add constraint FK2srdbppucviqdr51enpgpqvd8 foreign key (ingredient_history_id) references history_ingredient;
+alter table if exists ingredient_historical add constraint FKelmyr6k8me3vbes5i5uhvr3s7 foreign key (ingredient_id) references ingredient;
+alter table if exists stock_entry_ingredients add constraint FK25f6jiggalk04n7gx36knvr1i foreign key (ingredient_history_id) references history_ingredient;
+alter table if exists stock_entry_ingredients add constraint FKk2n28fpr7cc1rymbivy45piwt foreign key (stock_entry_id) references stock_entry;

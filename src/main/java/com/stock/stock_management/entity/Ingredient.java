@@ -9,12 +9,15 @@ import org.hibernate.annotations.SQLRestriction;
 
 import com.stock.stock_management.dto.IngredientRequest;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -57,8 +60,8 @@ public class Ingredient {
     @Column
     private boolean deleted = Boolean.FALSE;
 
-    @ManyToMany(mappedBy = "ingredients")
-    private List<StockEntry> stockEntries;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<IngredientHistory> ingredientsHistory;
 
     public Ingredient(String name, BigDecimal price, Integer quantity, String brand) {
         this.name = name;

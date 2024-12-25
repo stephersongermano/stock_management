@@ -17,8 +17,9 @@ public class IngredientMapper {
     }
 
     public IngredientResponse toIngredientResponse(Ingredient ingredient) {
-        return new IngredientResponse(ingredient.getId(), ingredient.getName(), ingredient.getPrice(),
-                ingredient.getQuantity(), ingredient.getBrand());
+        return new IngredientResponse(ingredient.getId(), ingredient.getName(), ingredient.getBrand(),
+                ingredient.getPrice(),
+                ingredient.getQuantity());
     }
 
     public static List<Ingredient> toDomainList(List<IngredientRequest> requestToIngredientList) {
@@ -26,6 +27,13 @@ public class IngredientMapper {
                 .map(Ingredient::new)
                 .collect(Collectors.toList());
 
+    }
+
+    public static List<IngredientResponse> toResponseList(List<Ingredient> ingredientListResponse) {
+        return ingredientListResponse.stream()
+                .map(ingredient -> new IngredientResponse(ingredient.getId(), ingredient.getName(),
+                        ingredient.getBrand(), ingredient.getPrice(), ingredient.getQuantity()))
+                .collect(Collectors.toList());
     }
 
 }

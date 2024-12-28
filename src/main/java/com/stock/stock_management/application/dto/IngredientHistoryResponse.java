@@ -1,4 +1,4 @@
-package com.stock.stock_management.dto;
+package com.stock.stock_management.application.dto;
 
 import java.math.BigDecimal;
 
@@ -9,11 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class IngredientHistoryRequest {
+public class IngredientHistoryResponse {
 
     private String name;
     private BigDecimal price;
     private Integer quantity;
     private String brand;
-
 }

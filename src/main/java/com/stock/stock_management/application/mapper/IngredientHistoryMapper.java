@@ -1,15 +1,15 @@
-package com.stock.stock_management.mapper;
+package com.stock.stock_management.application.mapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.stock.stock_management.dto.IngredientHistoryRequest;
-import com.stock.stock_management.dto.IngredientHistoryResponse;
-import com.stock.stock_management.dto.IngredientRequest;
-import com.stock.stock_management.dto.IngredientUpdateRequest;
-import com.stock.stock_management.entity.IngredientHistory;
+import com.stock.stock_management.application.dto.IngredientHistoryRequest;
+import com.stock.stock_management.application.dto.IngredientHistoryResponse;
+import com.stock.stock_management.application.dto.IngredientRequest;
+import com.stock.stock_management.application.dto.IngredientUpdateRequest;
+import com.stock.stock_management.domain.entity.IngredientHistory;
 
 @Component
 public class IngredientHistoryMapper {

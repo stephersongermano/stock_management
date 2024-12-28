@@ -1,4 +1,4 @@
-package com.stock.stock_management.controller;
+package com.stock.stock_management.application.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.stock.stock_management.dto.StockEntryRequest;
-import com.stock.stock_management.service.StockEntryService;
+import com.stock.stock_management.application.dto.StockEntryRequest;
+import com.stock.stock_management.domain.service.StockEntryService;
 
 @RestController
 @RequestMapping("/stock-entry")

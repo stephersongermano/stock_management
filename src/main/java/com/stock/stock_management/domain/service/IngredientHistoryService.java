@@ -1,12 +1,14 @@
-package com.stock.stock_management.service;
+package com.stock.stock_management.domain.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.stock.stock_management.dto.IngredientHistoryRequest;
-import com.stock.stock_management.dto.IngredientHistoryResponse;
-import com.stock.stock_management.mapper.IngredientHistoryMapper;
-import com.stock.stock_management.repository.IngredientHistoryRepository;
-import com.stock.stock_management.repository.IngredientRepository;
+import com.stock.stock_management.domain.entity.IngredientHistory;
+import com.stock.stock_management.domain.repository.IngredientHistoryRepository;
+import com.stock.stock_management.domain.repository.IngredientRepository;
+import com.stock.stock_management.application.dto.IngredientHistoryRequest;
+import com.stock.stock_management.application.dto.IngredientHistoryResponse;
+import com.stock.stock_management.application.mapper.IngredientHistoryMapper;
 
 @Service
 public class IngredientHistoryService {
@@ -25,26 +27,24 @@ public class IngredientHistoryService {
         this.ingredientService = ingredientService;
     }
 
-    public IngredientHistoryResponse create(IngredientHistoryRequest request) {
-        var ingredientHistory = this.ingredientHistoryMapper.toIngredientHistory(request);
+    @Transactional
+    public IngredientHistory create(IngredientHistoryRequest request) {
+        IngredientHistory ingredientHistory = this.ingredientHistoryMapper.toIngredientHistory(request);
 
-        var ingredientOptional = this.ingredientRepository.findByNameAndBrand(request.getName(), request.getBrand());
+        var existingIngredient = this.ingredientRepository.findByNameAndBrand(request.getName(), request.getBrand());
 
-        if (ingredientOptional.isPresent()) {
-            this.ingredientService.update(ingredientOptional.get().getId(),
+        existingIngredient.ifPresentOrElse(ingredient -> {
+            this.ingredientService.update(ingredient.getId(),
                     this.ingredientHistoryMapper.toIngredientUpdateRequest(request));
-            ingredientHistory.setIngredient(ingredientOptional.get());
-        } else {
+            ingredientHistory.setIngredient(ingredient);
+        }, () -> {
             var newIngredient = this.ingredientService
                     .create(this.ingredientHistoryMapper.toIngredientRequest(request));
             ingredientHistory.setIngredient(this.ingredientRepository.findById(newIngredient.getId())
                     .orElseThrow(() -> new RuntimeException("Ingredient creation failed")));
-        }
+        });
 
-        ingredientHistory = this.ingredientHistoryRepository.save(ingredientHistory);
-
-        return this.ingredientHistoryMapper.toIngredientHistoryResponse(ingredientHistory);
-
+        return this.ingredientHistoryRepository.save(ingredientHistory);
     }
 
 }

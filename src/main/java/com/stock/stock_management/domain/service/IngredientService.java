@@ -1,16 +1,17 @@
-package com.stock.stock_management.service;
+package com.stock.stock_management.domain.service;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.stock.stock_management.dto.IngredientRequest;
-import com.stock.stock_management.dto.IngredientResponse;
-import com.stock.stock_management.dto.IngredientUpdateRequest;
-import com.stock.stock_management.entity.Ingredient;
-import com.stock.stock_management.exception.IdNotFoundException;
-import com.stock.stock_management.mapper.IngredientMapper;
-import com.stock.stock_management.repository.IngredientRepository;
+import com.stock.stock_management.application.dto.IngredientRequest;
+import com.stock.stock_management.application.dto.IngredientResponse;
+import com.stock.stock_management.application.dto.IngredientUpdateRequest;
+import com.stock.stock_management.application.mapper.IngredientMapper;
+import com.stock.stock_management.domain.entity.Ingredient;
+import com.stock.stock_management.domain.repository.IngredientRepository;
+import com.stock.stock_management.shared.exception.IdNotFoundException;
 
 @Service
 public class IngredientService {
@@ -36,23 +37,25 @@ public class IngredientService {
                 .orElseThrow(() -> new IdNotFoundException(id));
     }
 
+    @Transactional
     public IngredientResponse create(IngredientRequest request) {
-        var ingredient = this.ingredientMapper.toIngredient(request);
+        Ingredient ingredient = this.ingredientMapper.toIngredient(request);
 
         this.ingredientRepository.save(ingredient);
 
         return this.ingredientMapper.toIngredientResponse(ingredient);
     }
 
+    @Transactional
     public IngredientResponse update(Long id, IngredientUpdateRequest request) {
-        Ingredient ingredientToUpdate = this.ingredientRepository.findById(id)
+        Ingredient ingredient = this.ingredientRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException(id));
 
-        ingredientToUpdate.updatePriceAndQuantity(request.getPrice(), request.getQuantity());
+        ingredient.updatePriceAndQuantity(request.getPrice(), request.getQuantity());
 
-        this.ingredientRepository.save(ingredientToUpdate);
+        this.ingredientRepository.save(ingredient);
 
-        return this.ingredientMapper.toIngredientResponse(ingredientToUpdate);
+        return this.ingredientMapper.toIngredientResponse(ingredient);
     }
 
     public void delete(Long id) {
@@ -60,13 +63,9 @@ public class IngredientService {
         Ingredient ingredientToDelete = this.ingredientRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException(id));
 
-        ingredientToDelete.setDeletedAt();
+        ingredientToDelete.markAsDeleted();
 
         this.ingredientRepository.save(ingredientToDelete);
-
-        this.ingredientRepository.delete(ingredientToDelete);
-
-        return;
 
     }
 

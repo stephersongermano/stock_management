@@ -1,13 +1,16 @@
-package com.stock.stock_management.service;
+package com.stock.stock_management.domain.service;
+
+import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.stock.stock_management.dto.IngredientHistoryRequest;
-import com.stock.stock_management.dto.StockEntryRequest;
-import com.stock.stock_management.dto.StockEntryResponse;
-import com.stock.stock_management.entity.IngredientHistory;
-import com.stock.stock_management.mapper.StockEntryMapper;
-import com.stock.stock_management.repository.StockEntryRepository;
+import com.stock.stock_management.application.dto.StockEntryRequest;
+import com.stock.stock_management.application.dto.StockEntryResponse;
+import com.stock.stock_management.application.mapper.StockEntryMapper;
+import com.stock.stock_management.domain.entity.IngredientHistory;
+import com.stock.stock_management.domain.entity.StockEntry;
+import com.stock.stock_management.domain.repository.StockEntryRepository;
 
 @Service
 public class StockEntryService {
@@ -23,12 +26,17 @@ public class StockEntryService {
         this.ingredientHistoryService = ingredientHistoryService;
     }
 
+    @Transactional
     public StockEntryResponse create(StockEntryRequest request) {
-        var stockEntry = this.stockEntryMapper.toStockEntry(request);
+        StockEntry stockEntry = this.stockEntryMapper.toStockEntry(request);
 
-        for (IngredientHistoryRequest historyRequest : request.getIngredientsHistory()) {
-            ingredientHistoryService.create(historyRequest);
-        }
+        List<IngredientHistory> ingredientsHistory = request.getIngredientsHistory().stream()
+                .map(ingredientHistoryService::create)
+                .toList();
+
+        ingredientsHistory.forEach(ingredientHistory -> ingredientHistory.setStockEntry(stockEntry));
+
+        stockEntry.setIngredientsHistory(ingredientsHistory);
 
         stockEntryRepository.save(stockEntry);
 

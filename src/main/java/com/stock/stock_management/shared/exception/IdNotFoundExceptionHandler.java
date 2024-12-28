@@ -1,4 +1,4 @@
-package com.stock.stock_management.exception;
+package com.stock.stock_management.shared.exception;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,4 +1,4 @@
-package com.stock.stock_management.controller;
+package com.stock.stock_management.application.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.stock.stock_management.dto.IngredientUpdateRequest;
-import com.stock.stock_management.service.IngredientService;
+import com.stock.stock_management.application.dto.IngredientUpdateRequest;
+import com.stock.stock_management.domain.service.IngredientService;
 
 @RestController
 @RequestMapping("/ingredients")
@@ -35,12 +35,6 @@ public class IngredientController {
         var response = this.ingredientService.findById(id);
         return ResponseEntity.ok(response);
     }
-
-    // @PostMapping
-    // public ResponseEntity<?> create(@RequestBody IngredientRequest request) {
-    // var response = this.ingredientService.create(request);
-    // return ResponseEntity.ok(response);
-    // }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestParam Long id, @RequestBody IngredientUpdateRequest request) {

@@ -1,4 +1,4 @@
-package com.stock.stock_management.dto;
+package com.stock.stock_management.application.dto;
 
 import java.math.BigDecimal;
 import java.util.List;

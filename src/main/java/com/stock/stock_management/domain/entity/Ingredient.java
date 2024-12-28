@@ -1,4 +1,4 @@
-package com.stock.stock_management.entity;
+package com.stock.stock_management.domain.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -7,7 +7,7 @@ import java.util.List;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import com.stock.stock_management.dto.IngredientRequest;
+import com.stock.stock_management.application.dto.IngredientRequest;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,9 +15,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -48,8 +48,8 @@ public class Ingredient {
     @Column(nullable = false)
     private String brand;
 
-    @Column(nullable = false)
-    private LocalDateTime created_at = LocalDateTime.now();
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime created_at;
 
     @Column
     private LocalDateTime updated_at;
@@ -58,7 +58,7 @@ public class Ingredient {
     private LocalDateTime deleted_at;
 
     @Column
-    private boolean deleted = Boolean.FALSE;
+    private Boolean deleted = Boolean.FALSE;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<IngredientHistory> ingredientsHistory;
@@ -77,29 +77,27 @@ public class Ingredient {
         this.brand = request.getBrand();
     }
 
-    public BigDecimal priceUpdate(BigDecimal newPrice, Integer newQuantity) {
-        setUpdatedAt();
-        return this.price = BigDecimal.valueOf(
-                ((this.price.doubleValue() * this.quantity) + (newPrice.doubleValue() * newQuantity)) / (this.quantity
-                        + newQuantity));
+    @PrePersist
+    private void PrePersist() {
+        this.created_at = LocalDateTime.now();
     }
 
-    public Integer quantityUpdate(Integer newQuantity) {
-        return this.quantity = this.quantity + newQuantity;
-    }
-
-    public void updatePriceAndQuantity(BigDecimal newPrice, Integer newQuantity) {
-        priceUpdate(newPrice, newQuantity);
-
-        quantityUpdate(newQuantity);
-    }
-
-    public void setUpdatedAt() {
+    @PreUpdate
+    private void preUpdate() {
         this.updated_at = LocalDateTime.now();
     }
 
-    public void setDeletedAt() {
+    public void markAsDeleted() {
+        this.deleted = true;
         this.deleted_at = LocalDateTime.now();
+    }
+
+    public void updatePriceAndQuantity(BigDecimal newPrice, Integer newQuantity) {
+        this.price = BigDecimal.valueOf(
+                ((this.price.doubleValue() * this.quantity) + (newPrice.doubleValue() * newQuantity)) / (this.quantity
+                        + newQuantity));
+
+        this.quantity = this.quantity + newQuantity;
     }
 
 }

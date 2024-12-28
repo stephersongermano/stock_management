@@ -1,9 +1,9 @@
-package com.stock.stock_management.entity;
+package com.stock.stock_management.domain.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import com.stock.stock_management.dto.IngredientHistoryRequest;
+import com.stock.stock_management.application.dto.IngredientHistoryRequest;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -40,8 +41,8 @@ public class IngredientHistory {
     @Column(nullable = false)
     private String brand;
 
-    @Column(nullable = false)
-    private LocalDateTime created_at = LocalDateTime.now();
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime created_at;
 
     @ManyToOne
     @JoinColumn(name = "stock_entry_id")
@@ -63,6 +64,11 @@ public class IngredientHistory {
         this.price = price;
         this.quantity = quantity;
         this.brand = brand;
+    }
+
+    @PrePersist
+    private void setcreatedAt() {
+        this.created_at = LocalDateTime.now();
     }
 
 }

@@ -1,4 +1,4 @@
-package com.stock.stock_management.entity;
+package com.stock.stock_management.domain.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,8 +12,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -30,8 +30,8 @@ public class StockEntry {
     @SequenceGenerator(name = "stock_entry_id_seq_generator", sequenceName = "stock_entry_id_seq", allocationSize = 1)
     private Long id;
 
-    @Column(name = "entry_date", nullable = false)
-    private LocalDateTime entryDate = LocalDateTime.now();
+    @Column(name = "entry_date", nullable = false, updatable = false)
+    private LocalDateTime entryDate;
 
     @Column(name = "note_number", nullable = false)
     private Integer noteNumber;
@@ -47,6 +47,11 @@ public class StockEntry {
         this.noteNumber = noteNumber;
         this.totalValue = totalValue;
         this.ingredientsHistory = ingredientsHistory;
+    }
+
+    @PrePersist
+    private void setEntryDate() {
+        this.entryDate = LocalDateTime.now();
     }
 
 }

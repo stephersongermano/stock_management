@@ -26,14 +26,16 @@ public class IngredientHistoryMapper {
     }
 
     public IngredientHistoryResponse toIngredientHistoryResponse(IngredientHistory ingredientHistory) {
-        return new IngredientHistoryResponse(ingredientHistory.getName(), ingredientHistory.getPrice(),
+        return new IngredientHistoryResponse(ingredientHistory.getId(), ingredientHistory.getName(),
+                ingredientHistory.getPrice(),
                 ingredientHistory.getQuantity(), ingredientHistory.getBrand());
     }
 
     public static List<IngredientHistoryResponse> toResponseListIngredientHistory(
             List<IngredientHistory> ingredientHistoryListResponse) {
         return ingredientHistoryListResponse.stream()
-                .map(ingredientHistory -> new IngredientHistoryResponse(ingredientHistory.getName(),
+                .map(ingredientHistory -> new IngredientHistoryResponse(ingredientHistory.getId(),
+                        ingredientHistory.getName(),
                         ingredientHistory.getPrice(), ingredientHistory.getQuantity(), ingredientHistory.getBrand()))
                 .collect(Collectors.toList());
     }

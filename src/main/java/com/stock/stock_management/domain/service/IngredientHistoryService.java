@@ -28,7 +28,7 @@ public class IngredientHistoryService {
     }
 
     @Transactional
-    public IngredientHistory create(IngredientHistoryRequest request) {
+    public IngredientHistoryResponse create(IngredientHistoryRequest request) {
         IngredientHistory ingredientHistory = this.ingredientHistoryMapper.toIngredientHistory(request);
 
         var existingIngredient = this.ingredientRepository.findByNameAndBrand(request.getName(), request.getBrand());
@@ -44,7 +44,9 @@ public class IngredientHistoryService {
                     .orElseThrow(() -> new RuntimeException("Ingredient creation failed")));
         });
 
-        return this.ingredientHistoryRepository.save(ingredientHistory);
+        this.ingredientHistoryRepository.save(ingredientHistory);
+
+        return this.ingredientHistoryMapper.toIngredientHistoryResponse(ingredientHistory);
     }
 
 }

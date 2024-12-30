@@ -1,0 +1,36 @@
+@startuml stock_management
+class Ingredient {
+  + Long id
+  + String name
+  + BigDecimal price
+  + Integer quantity
+  + String brand
+  + LocalDateTime created_at
+  + LocalDateTime updated_at
+  + List<IngredientHistory> ingredientsHistory
+  + void updatePriceAndQuantity(BigDecimal newPrice, Integer newQuantity)
+  + void markAsDeleted()
+}
+
+class IngredientHistory {
+  + Long id
+  + String name
+  + BigDecimal price
+  + Integer quantity
+  + String brand
+  + LocalDateTime created_at
+  + Ingredient ingredient
+  + StockEntry stockEntry
+}
+
+class StockEntry {
+  + Long id
+  + LocalDateTime entryDate
+  + Integer noteNumber
+  + BigDecimal totalValue
+  + List<IngredientHistory> ingredientsHistory
+}
+
+Ingredient "1" --> "0..*" IngredientHistory
+StockEntry "1" --> "0..*" IngredientHistory
+@enduml

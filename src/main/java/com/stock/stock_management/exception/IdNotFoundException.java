@@ -1,4 +1,4 @@
-package com.stock.stock_management.shared.exception;
+package com.stock.stock_management.exception;
 
 import jakarta.persistence.EntityNotFoundException;
 

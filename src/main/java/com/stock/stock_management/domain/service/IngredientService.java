@@ -11,7 +11,7 @@ import com.stock.stock_management.application.dto.IngredientUpdateRequest;
 import com.stock.stock_management.application.mapper.IngredientMapper;
 import com.stock.stock_management.domain.entity.Ingredient;
 import com.stock.stock_management.domain.repository.IngredientRepository;
-import com.stock.stock_management.shared.exception.IdNotFoundException;
+import com.stock.stock_management.exception.IdNotFoundException;
 
 @Service
 public class IngredientService {
